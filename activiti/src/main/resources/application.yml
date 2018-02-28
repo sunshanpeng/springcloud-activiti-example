@@ -1,0 +1,17 @@
+server:
+  port: 9003
+spring:
+  application:
+    name: activiti
+  datasource:
+      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://localhost:3306/workflow?useUnicode=true&characterEncoding=utf8
+      username: root
+      password: 123456
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8000/eureka/
+management:
+  security:
+    enabled: false  # 关闭访问权限控制
