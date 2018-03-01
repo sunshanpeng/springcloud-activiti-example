@@ -21,6 +21,7 @@
     	<module>eureka</module>
     	<module>activiti</module>
     	<module>business</module>
+    	<module>modeler</module>
     </modules>
 
 </project>

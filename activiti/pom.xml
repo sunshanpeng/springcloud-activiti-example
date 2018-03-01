@@ -21,7 +21,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java.version>1.7</java.version>
 		<spring-cloud.version>Dalston.RELEASE</spring-cloud.version>
-		<activiti.version>5.21.0</activiti.version>
+		<activiti.version>5.22.0</activiti.version>
 	</properties>
 
 	<dependencies>
@@ -48,7 +48,7 @@
 		<dependency>
 			<groupId>org.activiti</groupId>
 			<artifactId>activiti-spring-boot-starter-basic</artifactId>
-			<version>5.21.0</version>
+			<version>${activiti.version}</version>
 		</dependency>
 
 		<dependency>
