@@ -9,7 +9,6 @@ import org.activiti.bpmn.converter.BpmnXMLConverter;
 import org.activiti.bpmn.model.BpmnModel;
 import org.activiti.editor.constants.ModelDataJsonConstants;
 import org.activiti.editor.language.json.converter.BpmnJsonConverter;
-import org.activiti.engine.ProcessEngine;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.repository.Deployment;
 import org.activiti.engine.repository.DeploymentBuilder;
@@ -40,8 +39,6 @@ import java.util.Map;
 public class ModelController {
 
     @Autowired
-    private ProcessEngine processEngine;
-    @Autowired
     private ObjectMapper objectMapper;
     @Autowired
     private RepositoryService repositoryService;
@@ -53,10 +50,9 @@ public class ModelController {
      * @return
      * @throws UnsupportedEncodingException
      */
-    @ApiOperation(value = "新建一个空模型")
+    @ApiOperation(value = "新建一个空模型,用swagger打开没有界面")
     @GetMapping("/create")
     public ModelAndView create() throws UnsupportedEncodingException {
-        RepositoryService repositoryService = processEngine.getRepositoryService();
         //初始化一个空模型
         Model model = repositoryService.newModel();
 
@@ -98,7 +94,6 @@ public class ModelController {
     @ApiOperation(value = "获取所有模型")
     @GetMapping("/modelList")
     public List<Model> modelList() {
-        RepositoryService repositoryService = processEngine.getRepositoryService();
         return repositoryService.createModelQuery().orderByCreateTime().desc().list();
     }
 
@@ -111,7 +106,6 @@ public class ModelController {
     @ApiOperation(value = "删除模型")
     @DeleteMapping("{id}")
     public Object deleteModel(@PathVariable("id") String id) {
-        RepositoryService repositoryService = processEngine.getRepositoryService();
         repositoryService.deleteModel(id);
         return success();
     }
@@ -128,7 +122,6 @@ public class ModelController {
     public Object deploy(@PathVariable("id") String id) throws Exception {
 
         //获取模型
-        RepositoryService repositoryService = processEngine.getRepositoryService();
         Model modelData = repositoryService.getModel(id);
         byte[] bytes = repositoryService.getModelEditorSource(modelData.getId());
 
