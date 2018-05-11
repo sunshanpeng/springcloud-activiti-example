@@ -6,11 +6,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(name= "activiti",fallbackFactory = ActivitiClientFailBackFactory.class)
+@FeignClient(name = "activiti", fallbackFactory = ActivitiClientFailBackFactory.class)
 public interface ActivitiClient {
 
     /**
      * 获取已部署的流程实例
+     *
      * @return
      */
     @GetMapping("/getProcessDefinitionList")
@@ -24,9 +25,9 @@ public interface ActivitiClient {
      * @param businessKey
      */
     @RequestMapping(value = "/start", method = RequestMethod.POST)
-    void start(@RequestParam("processDefinitionId")String processDefinitionId,
-               @RequestParam("userId")String userId,
-               @RequestParam("businessKey")String businessKey);
+    void start(@RequestParam("processDefinitionId") String processDefinitionId,
+               @RequestParam("userId") String userId,
+               @RequestParam("businessKey") String businessKey);
 
     /**
      * 查看指派给个人的流程实例
@@ -53,7 +54,7 @@ public interface ActivitiClient {
      * @return
      */
     @GetMapping("/getInvolvedList")
-     List getInvolvedList(String userId);
+    List getInvolvedList(String userId);
 
     /**
      * 签收任务
@@ -63,8 +64,8 @@ public interface ActivitiClient {
      * @param userId
      */
     @PostMapping("/claim")
-    void claim(@RequestParam("taskId")String taskId,
-               @RequestParam("userId")String userId);
+    void claim(@RequestParam("taskId") String taskId,
+               @RequestParam("userId") String userId);
 
     /**
      * 完成实例

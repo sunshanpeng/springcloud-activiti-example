@@ -21,21 +21,19 @@ import org.springframework.web.bind.annotation.RestController;
 import java.io.InputStream;
 
 /**
- *
  * 获取编辑器信息
- *
  */
 @RestController
 @RequestMapping(value = "/service")
 public class StencilsetRestResource {
-  
-  @RequestMapping(value="/editor/stencilset", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
-  public String getStencilset() {
-    InputStream stencilsetStream = this.getClass().getClassLoader().getResourceAsStream("stencilset.json");
-    try {
-      return IOUtils.toString(stencilsetStream, "utf-8");
-    } catch (Exception e) {
-      throw new ActivitiException("Error while loading stencil set", e);
+
+    @RequestMapping(value = "/editor/stencilset", method = RequestMethod.GET, produces = "application/json;charset=utf-8")
+    public String getStencilset() {
+        InputStream stencilsetStream = this.getClass().getClassLoader().getResourceAsStream("stencilset.json");
+        try {
+            return IOUtils.toString(stencilsetStream, "utf-8");
+        } catch (Exception e) {
+            throw new ActivitiException("Error while loading stencil set", e);
+        }
     }
-  }
 }

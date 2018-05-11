@@ -1,5 +1,4 @@
-*/target/
-!.mvn/wrapper/maven-wrapper.jar
+*/target
 
 ### STS ###
 .apt_generated
@@ -23,3 +22,5 @@ dist/
 nbdist/
 .nb-gradle/
 
+### rebel  ###
+*/rebel.xml

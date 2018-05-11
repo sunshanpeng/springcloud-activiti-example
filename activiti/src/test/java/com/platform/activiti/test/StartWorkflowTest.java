@@ -14,7 +14,7 @@ public class StartWorkflowTest extends BaseTest {
                 = repositoryService.createProcessDefinitionQuery().processDefinitionId("leave:1:10").singleResult();
         System.out.println(processDefinition.getId().equals(processDefinition1.getId()));
         identityService.setAuthenticatedUserId("sun");
-        runtimeService.startProcessInstanceById(processDefinition.getId(),"testBusinessKey");
+        runtimeService.startProcessInstanceById(processDefinition.getId(), "testBusinessKey");
     }
 
 

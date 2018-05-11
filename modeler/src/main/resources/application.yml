@@ -5,12 +5,6 @@ spring:
     name: modeler
   datasource:
         driver-class-name: com.mysql.jdbc.Driver
-        url: jdbc:mysql://localhost:3306/workflow?useUnicode=true&characterEncoding=utf8
+        url: jdbc:mysql://10.208.204.46:3306/activiti?useUnicode=true&characterEncoding=utf8
         username: root
-        password: 123456
-eureka:
-  client:
-    register-with-eureka: false
-    fetch-registry: false
-    serviceUrl:
-      defaultZone: http://localhost:8000/eureka/
+        password: 123qwe

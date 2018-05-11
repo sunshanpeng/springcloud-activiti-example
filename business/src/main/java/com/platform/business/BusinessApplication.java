@@ -12,10 +12,9 @@ import org.springframework.cloud.netflix.feign.EnableFeignClients;
 @EnableCircuitBreaker
 public class BusinessApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(BusinessApplication.class, args);
-	}
-
+    public static void main(String[] args) {
+        SpringApplication.run(BusinessApplication.class, args);
+    }
 
 
 }

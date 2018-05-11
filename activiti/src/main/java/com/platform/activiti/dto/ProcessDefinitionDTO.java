@@ -7,11 +7,11 @@ import java.io.Serializable;
 
 /**
  * activiti.processDefinition's dto
- * @see org.activiti.engine.repository.ProcessDefinition
  *
  * @Author 孙善鹏
  * @Date 2018/2/28
  * @Time 15:38
+ * @see org.activiti.engine.repository.ProcessDefinition
  */
 @Data
 public class ProcessDefinitionDTO implements Serializable {
@@ -39,6 +39,7 @@ public class ProcessDefinitionDTO implements Serializable {
 
     /**
      * 消费方不需要此构造器
+     *
      * @param processDefinition
      */
     public ProcessDefinitionDTO(ProcessDefinition processDefinition) {

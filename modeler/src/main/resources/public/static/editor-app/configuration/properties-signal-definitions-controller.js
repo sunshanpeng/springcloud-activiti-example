@@ -74,7 +74,7 @@ angular.module('activitiModeler').controller('ActivitiSignalDefinitionsPopupCtrl
                 enableRowSelection: true,
                 enableRowHeaderSelection: false,
                 multiSelect: false,
-                keepLastSelected : false,
+                keepLastSelected: false,
                 selectedItems: $scope.selectedSignals,
                 columnDefs: [
                     {field: 'id', displayName: $scope.labels.idLabel},
@@ -89,14 +89,14 @@ angular.module('activitiModeler').controller('ActivitiSignalDefinitionsPopupCtrl
 
             $scope.signalDefinitions.push(newSignalDefinition);
             $timeout(function () {
-            	$scope.gridOptions.selectItem($scope.signalDefinitions.length - 1, true);
+                $scope.gridOptions.selectItem($scope.signalDefinitions.length - 1, true);
             });
         };
 
         // Click handler for remove button
         $scope.removeSignalDefinition = function () {
             if ($scope.selectedSignals && $scope.selectedSignals.length > 0) {
-            	var index = $scope.signalDefinitions.indexOf($scope.selectedSignals[0]);
+                var index = $scope.signalDefinitions.indexOf($scope.selectedSignals[0]);
                 $scope.gridOptions.selectItem(index, false);
                 $scope.signalDefinitions.splice(index, 1);
 

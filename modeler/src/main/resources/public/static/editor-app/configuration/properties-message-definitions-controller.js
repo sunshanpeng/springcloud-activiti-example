@@ -69,14 +69,14 @@ angular.module('activitiModeler').controller('ActivitiMessageDefinitionsPopupCtr
             $scope.labels.nameLabel = results[1];
             $scope.translationsRetrieved = true;
 
-         // Config for grid
+            // Config for grid
             $scope.gridOptions = {
                 data: 'messageDefinitions',
                 headerRowHeight: 28,
                 enableRowSelection: true,
                 enableRowHeaderSelection: false,
                 multiSelect: false,
-                keepLastSelected : false,
+                keepLastSelected: false,
                 selectedItems: $scope.selectedMessages,
                 columnDefs: [
                     {field: 'id', displayName: $scope.labels.idLabel},
@@ -90,14 +90,14 @@ angular.module('activitiModeler').controller('ActivitiMessageDefinitionsPopupCtr
 
             $scope.messageDefinitions.push(newMessageDefinition);
             $timeout(function () {
-            	$scope.gridOptions.selectItem($scope.messageDefinitions.length - 1, true);
+                $scope.gridOptions.selectItem($scope.messageDefinitions.length - 1, true);
             });
         };
 
         // Click handler for remove button
         $scope.removeMessageDefinition = function () {
-        	if ($scope.selectedMessages && $scope.selectedMessages.length > 0) {
-            	var index = $scope.messageDefinitions.indexOf($scope.selectedMessages[0]);
+            if ($scope.selectedMessages && $scope.selectedMessages.length > 0) {
+                var index = $scope.messageDefinitions.indexOf($scope.selectedMessages[0]);
                 $scope.gridOptions.selectItem(index, false);
                 $scope.messageDefinitions.splice(index, 1);
 

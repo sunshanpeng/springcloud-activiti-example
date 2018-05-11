@@ -8,11 +8,11 @@ import java.util.Map;
 
 /**
  * activiti.processInstance's dto
- * @see org.activiti.engine.runtime.ProcessInstance
  *
  * @Author 孙善鹏
  * @Date 2018/2/28
  * @Time 16:25
+ * @see org.activiti.engine.runtime.ProcessInstance
  */
 @Data
 public class ProcessInstanceDTO implements Serializable {
@@ -44,6 +44,7 @@ public class ProcessInstanceDTO implements Serializable {
 
     /**
      * 消费方不需要此构造器
+     *
      * @param processInstance
      */
     public ProcessInstanceDTO(ProcessInstance processInstance) {

@@ -9,11 +9,11 @@ import java.util.Map;
 
 /**
  * activiti.task's dto
- * @see org.activiti.engine.task.Task
  *
  * @Author 孙善鹏
  * @Date 2018/2/28
  * @Time 16:02
+ * @see org.activiti.engine.task.Task
  */
 @Data
 public class TaskDTO implements Serializable {
@@ -56,6 +56,7 @@ public class TaskDTO implements Serializable {
 
     /**
      * 消费方不需要此构造器
+     *
      * @param task
      */
     public TaskDTO(Task task) {
