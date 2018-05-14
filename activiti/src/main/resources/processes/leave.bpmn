@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1526007909719" name="" targetNamespace="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema">
   <process id="leave" isClosed="false" isExecutable="true" name="请假条" processType="None">
+  	<extensionElements>  
+      <activiti:executionListener event="start" class="com.platform.activiti.listener.GlobalExecutionListener"/>
+      <activiti:executionListener event="end" class="com.platform.activiti.listener.GlobalExecutionListener"/>
+      <activiti:executionListener event="take" class="com.platform.activiti.listener.GlobalExecutionListener"/>
+      <activiti:taskListener event="create" class="com.platform.activiti.listener.GlobalTaskListener"/>
+      <activiti:taskListener event="assignment" class="com.platform.activiti.listener.GlobalTaskListener"/>
+      <activiti:taskListener event="complete" class="com.platform.activiti.listener.GlobalTaskListener"/>
+      <activiti:taskListener event="delete" class="com.platform.activiti.listener.GlobalTaskListener"/>
+    </extensionElements>  
     <startEvent id="_2" name="start"/>
     <userTask activiti:candidateUsers="${userService.getDeptLeaderByUser(applyUserId)}" activiti:exclusive="true" id="leader" name="部门经理审批"/>
-    <userTask activiti:candidateUsers="${userService.getHR()}" activiti:exclusive="true" id="hr" name="HR审批"/>
+    <userTask activiti:candidateUsers="${userService.getHR()}" activiti:exclusive="true" id="hr" name="HR审批">
+    	<extensionElements>  
+	      <activiti:executionListener event="start" class="com.platform.activiti.listener.GlobalExecutionListener"/>  
+	      <activiti:executionListener event="end" class="com.platform.activiti.listener.GlobalExecutionListener"/>
+	      <activiti:executionListener event="take" class="com.platform.activiti.listener.GlobalExecutionListener"/>
+	    </extensionElements>  
+    </userTask>
     <userTask activiti:candidateUsers="boss" activiti:exclusive="true" id="boss" name="总监审批"/>
     <userTask activiti:assignee="${applyUserId}" activiti:exclusive="true" id="modifyApply" name="调整申请"/>
     <exclusiveGateway gatewayDirection="Unspecified" id="isLeaderAgree" name="部门经理意见"/>
