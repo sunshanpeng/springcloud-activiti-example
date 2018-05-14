@@ -13,14 +13,13 @@ import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
 import org.activiti.engine.task.Task;
 import org.activiti.engine.task.TaskQuery;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Api(description = "Activiti接口", tags = "activiti")
 @RestController
@@ -60,17 +59,15 @@ public class ActivitiController {
      * 新建流程实例（开始流程）
      *
      * @param processDefinitionId
-     * @param userId
      * @param businessKey
+     * @param params 业务参数：比如applyUserId
      */
     @ApiOperation("新建流程实例（开始流程）")
     @PostMapping("/start")
     public void start(String processDefinitionId,
-                      String userId,
-                      @RequestParam(required = false) String businessKey) {
-        identityService.setAuthenticatedUserId(userId);//感觉这里存在并发问题
-        runtimeService.startProcessInstanceById(processDefinitionId, businessKey);
-        identityService.setAuthenticatedUserId(null);
+                      @RequestParam(required = false) String businessKey,
+                      @RequestBody Map<String, Object> params) {
+        runtimeService.startProcessInstanceById(processDefinitionId, businessKey, params);
     }
 
     /**
@@ -155,7 +152,7 @@ public class ActivitiController {
      */
     @ApiOperation("完成实例")
     @PostMapping("/complete")
-    public void complete(String taskId) {
-        taskService.complete(taskId);
+    public void complete(String taskId, @RequestBody Map<String, Object> args) {
+        taskService.complete(taskId, args);
     }
 }

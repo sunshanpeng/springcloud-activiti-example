@@ -9,7 +9,7 @@ import java.util.Map;
 /**
  * activiti.processInstance's dto
  *
- * @Author 孙善鹏
+ * @Author sunshanpeng
  * @Date 2018/2/28
  * @Time 16:25
  * @see org.activiti.engine.runtime.ProcessInstance

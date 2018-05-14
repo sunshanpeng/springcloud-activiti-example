@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1526007909719" name="" targetNamespace="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema">
   <process id="leave" isClosed="false" isExecutable="true" name="请假条" processType="None">
-    <startEvent activiti:initiator="applyuserid" id="_2" name="start"/>
-    <userTask activiti:exclusive="true" id="leader" name="部门经理审批" activiti:candidateUsers="${userService.getDeptLeaderByUser(applyuserid)}"/>
-    <userTask activiti:exclusive="true" id="hr" name="HR审批" activiti:candidateUsers="${userService.getHR()}"/>
-    <userTask activiti:exclusive="true" id="boss" name="总监审批" activiti:candidateUsers="boss"/>
-    <userTask activiti:assignee="${applyuserid}" activiti:exclusive="true" id="modifyApply" name="调整申请"/>
+    <startEvent id="_2" name="start"/>
+    <userTask activiti:candidateUsers="${userService.getDeptLeaderByUser(applyUserId)}" activiti:exclusive="true" id="leader" name="部门经理审批"/>
+    <userTask activiti:candidateUsers="${userService.getHR()}" activiti:exclusive="true" id="hr" name="HR审批"/>
+    <userTask activiti:candidateUsers="boss" activiti:exclusive="true" id="boss" name="总监审批"/>
+    <userTask activiti:assignee="${applyUserId}" activiti:exclusive="true" id="modifyApply" name="调整申请"/>
     <exclusiveGateway gatewayDirection="Unspecified" id="isLeaderAgree" name="部门经理意见"/>
     <exclusiveGateway gatewayDirection="Unspecified" id="isHRAgree" name="HR意见"/>
     <exclusiveGateway gatewayDirection="Unspecified" id="isBossAgree" name="总监意见"/>
@@ -20,9 +20,6 @@
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${leaderApprove=='false'}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="_18" sourceRef="hr" targetRef="isHRAgree"/>
-    <sequenceFlow id="_19" name="通过" sourceRef="isHRAgree" targetRef="boss">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hrApprove=='true'}]]></conditionExpression>
-    </sequenceFlow>
     <sequenceFlow id="_20" name="不通过" sourceRef="isHRAgree" targetRef="modifyApply">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hrApprove=='false'}]]></conditionExpression>
     </sequenceFlow>
@@ -40,6 +37,16 @@
     <sequenceFlow id="_30" name="通过" sourceRef="isBossAgree" targetRef="_6">
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${bossApprove=='true'}]]></conditionExpression>
     </sequenceFlow>
+    <exclusiveGateway gatewayDirection="Unspecified" id="needBossApprove" name="是否需要总监审批"/>
+    <sequenceFlow id="_9" name="需要" sourceRef="needBossApprove" targetRef="boss">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${needBoss=='true'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_13" name="不需要" sourceRef="needBossApprove" targetRef="_6">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${needBoss=='false'}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="_4" name="通过" sourceRef="isHRAgree" targetRef="needBossApprove">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hrApprove=='true'}]]></conditionExpression>
+    </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram documentation="background=#3C3F41;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">
     <bpmndi:BPMNPlane bpmnElement="leave">
@@ -56,25 +63,25 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="hr" id="Shape-hr">
-        <omgdc:Bounds height="55.0" width="85.0" x="460.0" y="110.0"/>
+        <omgdc:Bounds height="55.0" width="85.0" x="495.0" y="105.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="boss" id="Shape-boss">
-        <omgdc:Bounds height="55.0" width="85.0" x="710.0" y="110.0"/>
+        <omgdc:Bounds height="55.0" width="85.0" x="890.0" y="215.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="_6" id="Shape-_6">
-        <omgdc:Bounds height="32.0" width="32.0" x="915.0" y="345.0"/>
+        <omgdc:Bounds height="32.0" width="32.0" x="1040.0" y="435.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="modifyApply" id="Shape-modifyApply">
-        <omgdc:Bounds height="55.0" width="85.0" x="280.0" y="225.0"/>
+        <omgdc:Bounds height="55.0" width="85.0" x="280.0" y="265.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
@@ -86,68 +93,75 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="isHRAgree" id="Shape-isHRAgree" isMarkerVisible="false">
-        <omgdc:Bounds height="32.0" width="32.0" x="575.0" y="120.0"/>
+        <omgdc:Bounds height="32.0" width="32.0" x="610.0" y="115.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="isBossAgree" id="Shape-isBossAgree" isMarkerVisible="false">
-        <omgdc:Bounds height="32.0" width="32.0" x="855.0" y="120.0"/>
+        <omgdc:Bounds height="32.0" width="32.0" x="915.0" y="300.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="resubmit" id="Shape-resubmit" isMarkerVisible="false">
-        <omgdc:Bounds height="32.0" width="32.0" x="310.0" y="340.0"/>
+        <omgdc:Bounds height="32.0" width="32.0" x="305.0" y="435.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNEdge bpmnElement="_12" id="BPMNEdge__12" sourceElement="isLeaderAgree" targetElement="modifyApply">
-        <omgdi:waypoint x="321.0" y="147.0"/>
-        <omgdi:waypoint x="321.0" y="225.0"/>
+      <bpmndi:BPMNShape bpmnElement="needBossApprove" id="Shape-needBossApprove" isMarkerVisible="false">
+        <omgdc:Bounds height="32.0" width="32.0" x="915.0" y="115.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="32.0" width="32.0" x="0.0" y="0.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge bpmnElement="_13" id="BPMNEdge__13" sourceElement="needBossApprove" targetElement="_6">
+        <omgdi:waypoint x="947.0" y="131.0"/>
+        <omgdi:waypoint x="1117.0" y="71.0"/>
+        <omgdi:waypoint x="1072.0" y="451.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_19" id="BPMNEdge__19" sourceElement="isHRAgree" targetElement="boss">
-        <omgdi:waypoint x="607.0" y="136.0"/>
-        <omgdi:waypoint x="710.0" y="137.5"/>
+      <bpmndi:BPMNEdge bpmnElement="_12" id="BPMNEdge__12" sourceElement="isLeaderAgree" targetElement="modifyApply">
+        <omgdi:waypoint x="321.0" y="147.0"/>
+        <omgdi:waypoint x="321.0" y="265.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_18" id="BPMNEdge__18" sourceElement="hr" targetElement="isHRAgree">
-        <omgdi:waypoint x="545.0" y="137.5"/>
-        <omgdi:waypoint x="575.0" y="136.0"/>
+        <omgdi:waypoint x="580.0" y="132.5"/>
+        <omgdi:waypoint x="610.0" y="131.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_20" id="BPMNEdge__20" sourceElement="isHRAgree" targetElement="modifyApply">
-        <omgdi:waypoint x="594.0" y="149.0"/>
-        <omgdi:waypoint x="594.0" y="243.0"/>
-        <omgdi:waypoint x="365.0" y="243.0"/>
+        <omgdi:waypoint x="624.0" y="145.0"/>
+        <omgdi:waypoint x="624.0" y="203.0"/>
+        <omgdi:waypoint x="365.0" y="292.5"/>
         <bpmndi:BPMNLabel>
-          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
+          <omgdc:Bounds height="42.0" width="-18.0" x="0.0" y="-59.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_24" id="BPMNEdge__24" sourceElement="boss" targetElement="isBossAgree">
-        <omgdi:waypoint x="795.0" y="137.5"/>
-        <omgdi:waypoint x="855.0" y="136.0"/>
+        <omgdi:waypoint x="931.0" y="270.0"/>
+        <omgdi:waypoint x="931.0" y="300.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_26" id="BPMNEdge__26" sourceElement="modifyApply" targetElement="resubmit">
-        <omgdi:waypoint x="326.0" y="280.0"/>
-        <omgdi:waypoint x="326.0" y="340.0"/>
+        <omgdi:waypoint x="321.0" y="320.0"/>
+        <omgdi:waypoint x="321.0" y="435.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_28" id="BPMNEdge__28" sourceElement="resubmit" targetElement="leader">
-        <omgdi:waypoint x="310.0" y="356.0"/>
+        <omgdi:waypoint x="305.0" y="451.0"/>
         <omgdi:waypoint x="170.0" y="255.0"/>
         <omgdi:waypoint x="170.0" y="160.0"/>
         <bpmndi:BPMNLabel>
@@ -155,18 +169,25 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_27" id="BPMNEdge__27" sourceElement="resubmit" targetElement="_6">
-        <omgdi:waypoint x="342.0" y="356.0"/>
-        <omgdi:waypoint x="915.0" y="361.0"/>
+        <omgdi:waypoint x="337.0" y="451.0"/>
+        <omgdi:waypoint x="1040.0" y="451.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_29" id="BPMNEdge__29" sourceElement="isBossAgree" targetElement="modifyApply">
-        <omgdi:waypoint x="870.0" y="151.0"/>
-        <omgdi:waypoint x="870.0" y="261.0"/>
-        <omgdi:waypoint x="365.0" y="261.0"/>
+        <omgdi:waypoint x="916.0" y="315.0"/>
+        <omgdi:waypoint x="803.0" y="315.0"/>
+        <omgdi:waypoint x="365.0" y="315.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="1.0" x="0.0" y="16.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_4" id="BPMNEdge__4" sourceElement="isHRAgree" targetElement="needBossApprove">
+        <omgdi:waypoint x="642.0" y="131.0"/>
+        <omgdi:waypoint x="915.0" y="131.0"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_7" id="BPMNEdge__7" sourceElement="_2" targetElement="leader">
@@ -176,17 +197,24 @@
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
-      <bpmndi:BPMNEdge bpmnElement="_30" id="BPMNEdge__30" sourceElement="isBossAgree" targetElement="_6">
-        <omgdi:waypoint x="887.0" y="136.0"/>
-        <omgdi:waypoint x="930.0" y="245.0"/>
-        <omgdi:waypoint x="930.0" y="345.0312805773287"/>
+      <bpmndi:BPMNEdge bpmnElement="_9" id="BPMNEdge__9" sourceElement="needBossApprove" targetElement="boss">
+        <omgdi:waypoint x="931.0" y="147.0"/>
+        <omgdi:waypoint x="931.0" y="215.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge bpmnElement="_30" id="BPMNEdge__30" sourceElement="isBossAgree" targetElement="_6">
+        <omgdi:waypoint x="946.0" y="315.0"/>
+        <omgdi:waypoint x="1057.0" y="315.0"/>
+        <omgdi:waypoint x="1057.0" y="435.0312805773287"/>
+        <bpmndi:BPMNLabel>
+          <omgdc:Bounds height="52.0" width="0.0" x="0.0" y="-11.0"/>
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_11" id="BPMNEdge__11" sourceElement="isLeaderAgree" targetElement="hr">
         <omgdi:waypoint x="337.0" y="131.0"/>
-        <omgdi:waypoint x="460.0" y="137.5"/>
+        <omgdi:waypoint x="495.0" y="132.5"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="1.0" width="-1.0" x="0.0" y="3.0"/>
         </bpmndi:BPMNLabel>

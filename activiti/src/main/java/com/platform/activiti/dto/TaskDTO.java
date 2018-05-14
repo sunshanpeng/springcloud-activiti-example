@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * activiti.task's dto
  *
- * @Author 孙善鹏
+ * @Author sunshanpeng
  * @Date 2018/2/28
  * @Time 16:02
  * @see org.activiti.engine.task.Task

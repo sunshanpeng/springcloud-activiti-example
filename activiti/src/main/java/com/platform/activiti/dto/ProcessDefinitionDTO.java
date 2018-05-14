@@ -8,7 +8,7 @@ import java.io.Serializable;
 /**
  * activiti.processDefinition's dto
  *
- * @Author 孙善鹏
+ * @Author sunshanpeng
  * @Date 2018/2/28
  * @Time 15:38
  * @see org.activiti.engine.repository.ProcessDefinition
