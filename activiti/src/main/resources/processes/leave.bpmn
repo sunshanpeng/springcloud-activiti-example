@@ -5,10 +5,10 @@
       <activiti:executionListener event="start" class="com.platform.activiti.listener.GlobalExecutionListener"/>
       <activiti:executionListener event="end" class="com.platform.activiti.listener.GlobalExecutionListener"/>
       <activiti:executionListener event="take" class="com.platform.activiti.listener.GlobalExecutionListener"/>
-      <activiti:taskListener event="create" class="com.platform.activiti.listener.GlobalTaskListener"/>
-      <activiti:taskListener event="assignment" class="com.platform.activiti.listener.GlobalTaskListener"/>
-      <activiti:taskListener event="complete" class="com.platform.activiti.listener.GlobalTaskListener"/>
-      <activiti:taskListener event="delete" class="com.platform.activiti.listener.GlobalTaskListener"/>
+      <activiti:taskListener event="create" class="com.platform.activiti.listener.MyTaskListener"/>
+      <activiti:taskListener event="assignment" class="com.platform.activiti.listener.MyTaskListener"/>
+      <activiti:taskListener event="complete" class="com.platform.activiti.listener.MyTaskListener"/>
+      <activiti:taskListener event="delete" class="com.platform.activiti.listener.MyTaskListener"/>
     </extensionElements>  
     <startEvent id="_2" name="start"/>
     <userTask activiti:candidateUsers="${userService.getDeptLeaderByUser(applyUserId)}" activiti:exclusive="true" id="leader" name="部门经理审批"/>
