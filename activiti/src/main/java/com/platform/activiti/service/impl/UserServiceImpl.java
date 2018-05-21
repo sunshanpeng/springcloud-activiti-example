@@ -15,13 +15,11 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
     @Override
     public String getDeptLeaderByUser(String userId) {
-        System.out.println("getDeptLeaderByUser===========");
         return "leader0";
     }
 
     @Override
     public List<String> getHR() {
-        System.out.println("getHR==========");
         List<String> list = new ArrayList<>();
         list.add("hr0");
         list.add("hr1");

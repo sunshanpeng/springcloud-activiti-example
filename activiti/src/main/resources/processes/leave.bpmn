@@ -1,24 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
 <definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:activiti="http://activiti.org/bpmn" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:omgdc="http://www.omg.org/spec/DD/20100524/DC" xmlns:omgdi="http://www.omg.org/spec/DD/20100524/DI" xmlns:tns="http://www.activiti.org/test" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" expressionLanguage="http://www.w3.org/1999/XPath" id="m1526007909719" name="" targetNamespace="http://www.activiti.org/test" typeLanguage="http://www.w3.org/2001/XMLSchema">
   <process id="leave" isClosed="false" isExecutable="true" name="请假条" processType="None">
-  	<extensionElements>  
-      <activiti:executionListener event="start" class="com.platform.activiti.listener.GlobalExecutionListener"/>
-      <activiti:executionListener event="end" class="com.platform.activiti.listener.GlobalExecutionListener"/>
-      <activiti:executionListener event="take" class="com.platform.activiti.listener.GlobalExecutionListener"/>
-      <activiti:taskListener event="create" class="com.platform.activiti.listener.MyTaskListener"/>
-      <activiti:taskListener event="assignment" class="com.platform.activiti.listener.MyTaskListener"/>
-      <activiti:taskListener event="complete" class="com.platform.activiti.listener.MyTaskListener"/>
-      <activiti:taskListener event="delete" class="com.platform.activiti.listener.MyTaskListener"/>
-    </extensionElements>  
+    <extensionElements>
+      <activiti:executionListener class="com.platform.activiti.listener.GlobalExecutionListener" event="start"/>
+      <activiti:executionListener class="com.platform.activiti.listener.GlobalExecutionListener" event="end"/>
+    </extensionElements>
     <startEvent id="_2" name="start"/>
     <userTask activiti:candidateUsers="${userService.getDeptLeaderByUser(applyUserId)}" activiti:exclusive="true" id="leader" name="部门经理审批"/>
-    <userTask activiti:candidateUsers="${userService.getHR()}" activiti:exclusive="true" id="hr" name="HR审批">
-    	<extensionElements>  
-	      <activiti:executionListener event="start" class="com.platform.activiti.listener.GlobalExecutionListener"/>  
-	      <activiti:executionListener event="end" class="com.platform.activiti.listener.GlobalExecutionListener"/>
-	      <activiti:executionListener event="take" class="com.platform.activiti.listener.GlobalExecutionListener"/>
-	    </extensionElements>  
-    </userTask>
+    <userTask activiti:candidateUsers="${userService.getHR()}" activiti:exclusive="true" id="hr" name="HR审批"/>
     <userTask activiti:candidateUsers="boss" activiti:exclusive="true" id="boss" name="总监审批"/>
     <userTask activiti:assignee="${applyUserId}" activiti:exclusive="true" id="modifyApply" name="调整申请"/>
     <exclusiveGateway gatewayDirection="Unspecified" id="isLeaderAgree" name="部门经理意见"/>
@@ -29,14 +18,14 @@
     <sequenceFlow id="_7" sourceRef="_2" targetRef="leader"/>
     <sequenceFlow id="_10" sourceRef="leader" targetRef="isLeaderAgree"/>
     <sequenceFlow id="_11" name="通过" sourceRef="isLeaderAgree" targetRef="hr">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${leaderApprove=='true'}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${leaderApprove}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="_12" name="不通过" sourceRef="isLeaderAgree" targetRef="modifyApply">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${leaderApprove=='false'}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!leaderApprove}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="_18" sourceRef="hr" targetRef="isHRAgree"/>
     <sequenceFlow id="_20" name="不通过" sourceRef="isHRAgree" targetRef="modifyApply">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hrApprove=='false'}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!hrApprove}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="_24" sourceRef="boss" targetRef="isBossAgree"/>
     <sequenceFlow id="_26" sourceRef="modifyApply" targetRef="resubmit"/>
@@ -47,20 +36,20 @@
       <conditionExpression xsi:type="tFormalExpression"><![CDATA[${reapply=='true'}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="_29" name="不通过" sourceRef="isBossAgree" targetRef="modifyApply">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${bossApprove=='false'}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${bossReject}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="_30" name="通过" sourceRef="isBossAgree" targetRef="_6">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${bossApprove=='true'}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${bossApprove}]]></conditionExpression>
     </sequenceFlow>
     <exclusiveGateway gatewayDirection="Unspecified" id="needBossApprove" name="是否需要总监审批"/>
     <sequenceFlow id="_9" name="需要" sourceRef="needBossApprove" targetRef="boss">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${needBoss=='true'}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${needBoss}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="_13" name="不需要" sourceRef="needBossApprove" targetRef="_6">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${needBoss=='false'}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!needBoss}]]></conditionExpression>
     </sequenceFlow>
     <sequenceFlow id="_4" name="通过" sourceRef="isHRAgree" targetRef="needBossApprove">
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hrApprove=='true'}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${hrApprove}]]></conditionExpression>
     </sequenceFlow>
   </process>
   <bpmndi:BPMNDiagram documentation="background=#3C3F41;count=1;horizontalcount=1;orientation=0;width=842.4;height=1195.2;imageableWidth=832.4;imageableHeight=1185.2;imageableX=5.0;imageableY=5.0" id="Diagram-_1" name="New Diagram">
@@ -72,19 +61,19 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="leader" id="Shape-leader">
-        <omgdc:Bounds height="55.0" width="85.0" x="140.0" y="105.0"/>
+        <omgdc:Bounds height="55.0" width="85.0" x="155.0" y="105.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="hr" id="Shape-hr">
-        <omgdc:Bounds height="55.0" width="85.0" x="495.0" y="105.0"/>
+        <omgdc:Bounds height="55.0" width="85.0" x="480.0" y="105.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="boss" id="Shape-boss">
-        <omgdc:Bounds height="55.0" width="85.0" x="890.0" y="215.0"/>
+        <omgdc:Bounds height="55.0" width="85.0" x="890.0" y="200.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="55.0" width="85.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
@@ -147,7 +136,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_18" id="BPMNEdge__18" sourceElement="hr" targetElement="isHRAgree">
-        <omgdi:waypoint x="580.0" y="132.5"/>
+        <omgdi:waypoint x="565.0" y="132.5"/>
         <omgdi:waypoint x="610.0" y="131.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
@@ -162,7 +151,7 @@
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_24" id="BPMNEdge__24" sourceElement="boss" targetElement="isBossAgree">
-        <omgdi:waypoint x="931.0" y="270.0"/>
+        <omgdi:waypoint x="931.0" y="255.0"/>
         <omgdi:waypoint x="931.0" y="300.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
@@ -207,14 +196,14 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_7" id="BPMNEdge__7" sourceElement="_2" targetElement="leader">
         <omgdi:waypoint x="67.0" y="131.0"/>
-        <omgdi:waypoint x="140.0" y="132.5"/>
+        <omgdi:waypoint x="155.0" y="132.5"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_9" id="BPMNEdge__9" sourceElement="needBossApprove" targetElement="boss">
         <omgdi:waypoint x="931.0" y="147.0"/>
-        <omgdi:waypoint x="931.0" y="215.0"/>
+        <omgdi:waypoint x="931.0" y="200.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>
         </bpmndi:BPMNLabel>
@@ -229,13 +218,13 @@
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_11" id="BPMNEdge__11" sourceElement="isLeaderAgree" targetElement="hr">
         <omgdi:waypoint x="337.0" y="131.0"/>
-        <omgdi:waypoint x="495.0" y="132.5"/>
+        <omgdi:waypoint x="480.0" y="132.5"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="1.0" width="-1.0" x="0.0" y="3.0"/>
         </bpmndi:BPMNLabel>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="_10" id="BPMNEdge__10" sourceElement="leader" targetElement="isLeaderAgree">
-        <omgdi:waypoint x="225.0" y="132.5"/>
+        <omgdi:waypoint x="240.0" y="132.5"/>
         <omgdi:waypoint x="305.0" y="131.0"/>
         <bpmndi:BPMNLabel>
           <omgdc:Bounds height="0.0" width="0.0" x="0.0" y="0.0"/>

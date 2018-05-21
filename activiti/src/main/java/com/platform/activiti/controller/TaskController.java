@@ -18,7 +18,7 @@ import java.util.Map;
  * @Date 2018/5/15
  * @Time 17:02
  */
-@Api(description = "任务接口",tags = "task")
+@Api(tags = "task")
 @RestController
 @RequestMapping("/task")
 public class TaskController {
@@ -68,18 +68,6 @@ public class TaskController {
         return list;
     }
 
-    /**
-     * 签收任务
-     * 处理角色任务之前需要先签收
-     *
-     * @param taskId
-     * @param userId
-     */
-    @ApiOperation("签收任务")
-    @PostMapping("/claim")
-    public void claim(String taskId, String userId) {
-        taskService.claim(taskId, userId);
-    }
 
     /**
      * 处理任务
@@ -88,7 +76,10 @@ public class TaskController {
      */
     @ApiOperation("处理任务")
     @PostMapping("/complete")
-    public void complete(String taskId, @RequestBody Map<String, Object> args) {
+    public void complete(String taskId,
+                         String userId,
+                         @RequestBody Map<String, Object> args) {
+        taskService.claim(taskId, userId);
         taskService.complete(taskId, args);
     }
 

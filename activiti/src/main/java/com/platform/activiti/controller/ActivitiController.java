@@ -2,32 +2,31 @@ package com.platform.activiti.controller;
 
 import com.platform.activiti.dto.ProcessDefinitionDTO;
 import com.platform.activiti.dto.ProcessInstanceDTO;
-import com.platform.activiti.dto.TaskDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.activiti.engine.IdentityService;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
-import org.activiti.engine.TaskService;
 import org.activiti.engine.repository.DeploymentBuilder;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.ProcessInstance;
-import org.activiti.engine.task.Task;
-import org.activiti.engine.task.TaskQuery;
 import org.apache.commons.io.FilenameUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.zip.ZipInputStream;
 
-@Api(description = "Activiti接口", tags = "activiti")
+@Api(tags = "activiti")
 @RestController
+@RequestMapping("/activiti")
 @Slf4j
 public class ActivitiController {
 
@@ -36,6 +35,8 @@ public class ActivitiController {
 
     @Resource
     private RepositoryService repositoryService;
+
+    private static final String RETURN_SUCCESS = "success";
 
     /**
      * 获取已部署的流程实例
@@ -53,6 +54,32 @@ public class ActivitiController {
             }
         }
         return list;
+    }
+
+    /**
+     * 读取资源，通过部署ID
+     *
+     * @param processDefinitionId 流程定义
+     * @param resourceType        资源类型(xml|image)
+     * @throws Exception
+     */
+    @ApiOperation("根据processDefinitionId获取资源文件")
+    @GetMapping(value = "/read")
+    public void loadByDeployment(@RequestParam("processDefinitionId") String processDefinitionId, @RequestParam("resourceType") String resourceType,
+                                 HttpServletResponse response) throws Exception {
+        ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(processDefinitionId).singleResult();
+        String resourceName = "";
+        if (resourceType.equals("image")) {
+            resourceName = processDefinition.getDiagramResourceName();
+        } else if (resourceType.equals("xml")) {
+            resourceName = processDefinition.getResourceName();
+        }
+        InputStream resourceAsStream = repositoryService.getResourceAsStream(processDefinition.getDeploymentId(), resourceName);
+        byte[] b = new byte[1024];
+        int len = -1;
+        while ((len = resourceAsStream.read(b, 0, 1024)) != -1) {
+            response.getOutputStream().write(b, 0, len);
+        }
     }
 
     /**
@@ -119,7 +146,7 @@ public class ActivitiController {
             log.error("error on deploy process, because of file input stream", e);
         }
 
-        return "success";
+        return RETURN_SUCCESS;
     }
 
     /**
@@ -129,9 +156,50 @@ public class ActivitiController {
      *
      * @param deploymentId 流程部署（ACT_RE_DEPLOYMENT）ID
      */
+    @ApiOperation("删除部署的流程")
     @DeleteMapping(value = "/deleteDeployment")
     public String deleteDeployment(@RequestParam String deploymentId) {
         repositoryService.deleteDeployment(deploymentId, true);
-        return "success";
+        return RETURN_SUCCESS;
+    }
+
+    /**
+     * 挂起、激活流程实例
+     */
+    @ApiOperation("挂起、激活流程实例")
+    @PutMapping(value = "update/{state}/{processInstanceId}")
+    public String updateInstanceState(@PathVariable("state") String state,
+                              @PathVariable("processInstanceId") String processInstanceId) {
+        switch (state) {
+            case "active":
+                runtimeService.activateProcessInstanceById(processInstanceId);
+                break;
+            case "suspend":
+                runtimeService.suspendProcessInstanceById(processInstanceId);
+                break;
+            default:
+                throw new HttpServerErrorException(HttpStatus.BAD_REQUEST, "state value must be active | suspend");
+        }
+        return RETURN_SUCCESS;
+    }
+
+    /**
+     * 挂起、激活流程定义
+     */
+    @ApiOperation("挂起、激活流程实例")
+    @PutMapping(value = "update/{state}/{processDefinitionId}")
+    public String updateDefinitionState(@PathVariable("state") String state,
+                              @PathVariable("processDefinitionId") String processDefinitionId) {
+        switch (state) {
+            case "active":
+                repositoryService.activateProcessDefinitionById(processDefinitionId);
+                break;
+            case "suspend":
+                repositoryService.suspendProcessDefinitionById(processDefinitionId);
+                break;
+            default:
+                throw new HttpServerErrorException(HttpStatus.BAD_REQUEST, "state value must be active | suspend");
+        }
+        return RETURN_SUCCESS;
     }
 }
