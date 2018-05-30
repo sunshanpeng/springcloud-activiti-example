@@ -4,6 +4,7 @@ import com.platform.activiti.dto.ProcessDefinitionDTO;
 import com.platform.activiti.dto.ProcessInstanceDTO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.RepositoryService;
 import org.activiti.engine.RuntimeService;
@@ -65,11 +66,13 @@ public class ActivitiController {
      */
     @ApiOperation("根据processDefinitionId获取资源文件")
     @GetMapping(value = "/read")
-    public void loadByDeployment(@RequestParam("processDefinitionId") String processDefinitionId, @RequestParam("resourceType") String resourceType,
+    public void loadByDeployment(@RequestParam String processDefinitionId,
+                                 @RequestParam String resourceType,
                                  HttpServletResponse response) throws Exception {
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId(processDefinitionId).singleResult();
         String resourceName = "";
         if (resourceType.equals("image")) {
+            response.setContentType("image/png");
             resourceName = processDefinition.getDiagramResourceName();
         } else if (resourceType.equals("xml")) {
             resourceName = processDefinition.getResourceName();
@@ -91,7 +94,7 @@ public class ActivitiController {
      */
     @ApiOperation("新建流程实例（开始流程）")
     @PostMapping("/start")
-    public void start(String processDefinitionId,
+    public void start(@RequestParam String processDefinitionId,
                       @RequestParam(required = false) String businessKey,
                       @RequestBody Map<String, Object> params) {
         runtimeService.startProcessInstanceById(processDefinitionId, businessKey, params);
@@ -106,7 +109,7 @@ public class ActivitiController {
      */
     @ApiOperation("查看参与的流程实例")
     @GetMapping("/getInvolvedList")
-    public List getInvolvedList(String userId) {
+    public List getInvolvedList(@RequestParam String userId) {
         List<ProcessInstance> processInstances = runtimeService.createProcessInstanceQuery().involvedUser(userId).list();
         List<ProcessInstanceDTO> list = new ArrayList<>();
         if (processInstances != null) {
@@ -168,8 +171,10 @@ public class ActivitiController {
      */
     @ApiOperation("挂起、激活流程实例")
     @PutMapping(value = "update/{state}/{processInstanceId}")
-    public String updateInstanceState(@PathVariable("state") String state,
-                              @PathVariable("processInstanceId") String processInstanceId) {
+    public String updateInstanceState(
+            @ApiParam(required = true, allowableValues = "active, suspend")
+            @PathVariable("state") String state,
+            @PathVariable("processInstanceId") String processInstanceId) {
         switch (state) {
             case "active":
                 runtimeService.activateProcessInstanceById(processInstanceId);
@@ -186,10 +191,12 @@ public class ActivitiController {
     /**
      * 挂起、激活流程定义
      */
-    @ApiOperation("挂起、激活流程实例")
+    @ApiOperation("挂起、激活流程定义")
     @PutMapping(value = "update/{state}/{processDefinitionId}")
-    public String updateDefinitionState(@PathVariable("state") String state,
-                              @PathVariable("processDefinitionId") String processDefinitionId) {
+    public String updateDefinitionState(
+            @ApiParam(required = true, allowableValues = "active, suspend")
+            @PathVariable("state") String state,
+            @PathVariable("processDefinitionId") String processDefinitionId) {
         switch (state) {
             case "active":
                 repositoryService.activateProcessDefinitionById(processDefinitionId);

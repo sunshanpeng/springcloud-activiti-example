@@ -11,8 +11,10 @@ import org.activiti.engine.delegate.ExecutionListener;
  */
 @Slf4j
 public class GlobalExecutionListener implements ExecutionListener {
+
     @Override
     public void notify(DelegateExecution execution) throws Exception {
         log.info("GlobalExecutionListener.DelegateExecution={}", execution);
     }
+
 }
