@@ -15,6 +15,16 @@
     <exclusiveGateway gatewayDirection="Unspecified" id="isBossAgree" name="总监意见"/>
     <exclusiveGateway gatewayDirection="Unspecified" id="resubmit" name="重新提交"/>
     <endEvent id="_6" name="end"/>
+    <boundaryEvent id="boundarytimer1" name="Timer" attachedToRef="hr" cancelActivity="true">  
+      <timerEventDefinition>  
+          <timeDuration>PT60S</timeDuration>  
+      </timerEventDefinition>  
+	</boundaryEvent>  
+	<sequenceFlow id="flow1" name="超时" sourceRef="boundarytimer1" targetRef="modifyApply">  
+      <extensionElements>  
+        <activiti:executionListener event="take" class="com.platform.activiti.listener.GlobalExecutionListener"></activiti:executionListener>  
+      </extensionElements>  
+    </sequenceFlow>  
     <sequenceFlow id="_7" sourceRef="_2" targetRef="leader"/>
     <sequenceFlow id="_10" sourceRef="leader" targetRef="isLeaderAgree"/>
     <sequenceFlow id="_11" name="通过" sourceRef="isLeaderAgree" targetRef="hr">

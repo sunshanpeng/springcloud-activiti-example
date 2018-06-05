@@ -1,12 +1,16 @@
 package com.platform.activiti.test;
 
 import com.platform.activiti.BaseTest;
+import org.activiti.engine.history.HistoricActivityInstance;
+import org.activiti.engine.history.HistoricProcessInstance;
 import org.activiti.engine.repository.ProcessDefinition;
 import org.activiti.engine.runtime.Execution;
 import org.activiti.engine.runtime.NativeExecutionQuery;
 import org.activiti.engine.task.Task;
 import org.junit.Test;
+import org.springframework.util.CollectionUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -48,5 +52,22 @@ public class NativeTaskTest extends BaseTest {
     public void test() {
         ProcessDefinition processDefinition = repositoryService.createProcessDefinitionQuery().processDefinitionId("myProcess:1:8").singleResult();
 
+    }
+
+    @Test
+    public void testGetCompletedNodes() {
+        List<String> finishedActiveActivityIds = new ArrayList<>(); // 已完成的节点
+        List<HistoricProcessInstance> list = historyService.createHistoricProcessInstanceQuery()
+                .processInstanceBusinessKey("1102").list();
+        if (!CollectionUtils.isEmpty(list)) {
+            List<HistoricActivityInstance> historicActivityInstances
+                    = historyService.createHistoricActivityInstanceQuery()
+                    .processInstanceId(list.get(0).getId()).finished().list();
+            for (HistoricActivityInstance hai : historicActivityInstances) {
+                finishedActiveActivityIds.add(hai.getActivityId());
+            }
+            List<String> activeActivityIds = runtimeService.getActiveActivityIds(list.get(0).getId());
+            finishedActiveActivityIds.addAll(activeActivityIds);
+        }
     }
 }
