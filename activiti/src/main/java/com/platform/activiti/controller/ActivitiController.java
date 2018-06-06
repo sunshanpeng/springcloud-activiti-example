@@ -209,4 +209,11 @@ public class ActivitiController {
         }
         return RETURN_SUCCESS;
     }
+
+    @ApiOperation("取消流程")
+    @PutMapping("/cancel")
+    public String cancel(String processInstanceId, String reason) {
+        runtimeService.deleteProcessInstance(processInstanceId, reason);
+        return RETURN_SUCCESS;
+    }
 }
