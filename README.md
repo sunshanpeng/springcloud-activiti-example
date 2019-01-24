@@ -28,4 +28,5 @@ Activiti : 5.22.0
 4. 启动modeler，端口8001
     
  > modeler不依赖eureka，可以单独使用 
+ > 用modelr生成的流程图，在转换成图片的时候排版会错乱，所以不推荐使用
   
