@@ -96,4 +96,16 @@ public class TaskController {
         return "success";
     }
 
+    /**
+     * 签收任务
+     *
+     * @param taskId
+     */
+    @ApiOperation("签收任务")
+    @PostMapping("/claim")
+    public void claim(String taskId,
+                         String userId) {
+        taskService.claim(taskId, userId);
+    }
+
 }
