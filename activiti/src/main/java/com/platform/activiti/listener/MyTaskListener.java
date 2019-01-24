@@ -3,6 +3,7 @@ package com.platform.activiti.listener;
 import lombok.extern.slf4j.Slf4j;
 import org.activiti.engine.TaskService;
 import org.activiti.engine.delegate.DelegateTask;
+import org.activiti.engine.delegate.Expression;
 import org.activiti.engine.delegate.TaskListener;
 import org.activiti.engine.impl.persistence.entity.IdentityLinkEntity;
 import org.activiti.engine.impl.persistence.entity.TaskEntity;
@@ -33,6 +34,10 @@ public class MyTaskListener implements TaskListener {
 
     @Resource
     private ScheduledExecutorService delayExecutorService;
+
+    //可以在任务中自定义参数
+    private Expression customizeExpression;
+
 
     @Override
     public void notify(DelegateTask delegateTask) {
